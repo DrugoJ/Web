@@ -30,15 +30,11 @@ import session.PurchaseFacade;
  *
  * @author User
  */
-@WebServlet(name = "ShopController", urlPatterns = {
+@WebServlet(name = "AdminController", urlPatterns = {
     "/addProduct",
-    "/showaddPurchase",
-    "/createProduct",
-    "/addPurchase"})
-public class ShopController extends HttpServlet {
+    "/createProduct"})
+public class AdminController extends HttpServlet {
 @EJB private ProductFacade productFacade;
-@EJB private CustomerFacade customerFacade;
-@EJB private PurchaseFacade purchaseFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -71,55 +67,10 @@ public class ShopController extends HttpServlet {
             return;
         }
         String path = request.getServletPath();
-        if(null == path){
-            
-        }
-        else switch (path) {
+        switch (path) {
             case "/addProduct":
                 request.getRequestDispatcher("/addProduct.jsp").forward(request, response);
                 break;
-            case "/addCustomer":
-                request.getRequestDispatcher("/addCustomer.jsp").forward(request, response);
-                break;
-            
-            case "/showaddPurchase":
-            {
-                List<Product> listProducts = productFacade.findAll();
-                request.setAttribute("listProducts", listProducts);
-                List<Customer> listCustomers = customerFacade.findAll();
-                request.setAttribute("listCustomers", listCustomers);
-                request.getRequestDispatcher("/addPurchase.jsp").forward(request, response);
-                break;
-            }
-            case "/addPurchase":
-            {
-                String productId = request.getParameter("productId");
-                Product product = productFacade.find(Long.parseLong(productId));
-                String customerId = request.getParameter("customerId");
-                Customer customer = customerFacade.find(Long.parseLong(customerId));
-                String quantity = request.getParameter("quantity");
-                Calendar c = new GregorianCalendar();
-                if(customer.getMoney()-(product.getPrice()*Integer.parseInt(quantity))<0){
-                    request.setAttribute("info", customer.getSurname()+" - Не хватает денег");
-                    request.getRequestDispatcher("/index.jsp").forward(request, response);
-                    break;
-                }
-                if(product.getAmount() - Integer.parseInt(quantity)<0){
-                    request.setAttribute("info", customer.getSurname()+" - Не хватает товара!");
-                    request.getRequestDispatcher("/index.jsp").forward(request, response);
-                    break;
-                }
-                customer.setMoney(customer.getMoney()-product.getPrice()*Integer.parseInt(quantity));
-                customerFacade.edit(customer);
-                product.setAmount(product.getAmount()-Integer.parseInt(quantity));
-                productFacade.edit(product);
-                
-                Purchase purchase = new Purchase(null, customer, product, c.getTime(), Integer.parseInt(quantity));
-                purchaseFacade.create(purchase);
-                request.setAttribute("info", customer.getSurname()+" купил "+" "+quantity+" "+product.getName());
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
-                break;
-            }
             case "/createProduct":
                 {
                     String name = request.getParameter("name");
@@ -132,6 +83,8 @@ public class ShopController extends HttpServlet {
                     break;
                 }
             default:
+                request.setAttribute("info", "This page doesn't exist");
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
                 break;
         }
     }

@@ -21,12 +21,12 @@
                     <option value="${product.ID}">${product.name}</option>
                 </c:forEach>
             </select><br>
-            Customer list:<br>
+<!--            Customer list:<br>
             <select name="customerId">
                 <c:forEach var="customer" items="${listCustomers}">
                     <option value="${customer.ID}">${customer.name}</option>
                 </c:forEach>
-            </select><br>
+            </select><br>-->
             Amount:<br>
             <input type="text" name="quantity"><br><br>
             <input type="submit" value="Buy">

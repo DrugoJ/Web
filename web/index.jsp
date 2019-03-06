@@ -22,5 +22,6 @@
         <br><a href="showLogin">Sign in</a>
         <br><a href="logout">Sign out</a>
         <br><a href="showRegistration">Sign up (Registration)</a>
+        <br><a href="showAddMoney">Add money</a>
     </body>
 </html>
